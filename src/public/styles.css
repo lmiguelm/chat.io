@@ -219,3 +219,24 @@ input:focus, button:focus {
     opacity: 0;
   }
 }
+
+.dev-container {
+  flex: 1;
+  justify-content: flex-end;
+  display: flex;
+  /* background-color: darkgray; */
+}
+
+.title {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.icon {
+  height: 35px;
+  width: 35px;
+  margin-right: 10px;
+  cursor: pointer;
+}
