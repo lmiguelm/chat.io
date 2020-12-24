@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pr-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+      <nav>
+        <h1>Chat ao vivo</h1>
+        <div class="online"></div>
+      </nav>
+      <div class="container-body">
+        <aside>
+          <h1>Meu Perfil</h1>
+          <form onsubmit="saveProfile(event)" id="profile">
+            <label for="img">
+              <img src="https://www.promoview.com.br/uploads/images/unnamed%2819%29.png">
+            </label>
+            <input type="text" id="name" class="input-name" placeholder="Informe seu nome">
+            <button type="submit" class="save-profile">Salvar</button>
+          </form>
+        </aside>
+
+        <div class="chat">
+
+          <div class="chat-content" id="chat">
+    
+          </div>
+
+          <div class="chat-footer">
+            <input  maxlength="120" onkeypress="sendMessage(event)" placeholder="Digite uma mensagem" type="text" id="msg" class="input-chat" />
+            <button  onclick="sendMessage(event)" class="submit-msg">Enviar</button>
+          </div>
+        </div>
+      </div>
+  </body>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+  <script>
+    const socket = io();
+
+    socket.on('newMessage', data => {
+      renderMsg(data);
+    });
+
+    socket.on('loadMessages', messages => {
+      messages.map(msg => renderMsg(msg));
+    });
+
+    function renderMsg(data, my) {
+      let chat = document.getElementById('chat');
+
+      let messageContainer = document.createElement("div");
+      if(my) {
+        messageContainer.className = 'msg-container-my';
+      } else {
+        messageContainer.className = 'msg-container';
+      }
+
+      let msg = document.createElement("p");
+
+      let profileContainer = document.createElement("div");
+      profileContainer.className = 'profile';
+
+
+      let img = document.createElement('img')
+      img.setAttribute('src', data.photo);
+
+      let strong = document.createElement('strong');
+      
+
+      msg.innerText = data.msg;
+      strong.innerText = data.name;
+
+      profileContainer.appendChild(img);
+      profileContainer.appendChild(strong);
+      messageContainer.appendChild(msg);
+      messageContainer.appendChild(profileContainer);
+      chat.appendChild(messageContainer)
+
+      scrollBottom();
+    }
+
+    function saveProfile(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value;
+
+      localStorage.setItem('name', name);
+      localStorage.setItem('photo', 'https://www.promoview.com.br/uploads/images/unnamed%2819%29.png');
+      alert('Perfil salvo com sucesso!');
+    }
+
+    function sendMessage(e) {
+      if(e.keyCode == 13 || e.type == 'click') {
+        let name = localStorage.getItem('name') || 'Anônimo';
+        const photo = localStorage.getItem('photo') || 'https://www.promoview.com.br/uploads/images/unnamed%2819%29.png';
+        const msg = document.getElementById('msg').value;
+
+        if(msg !== '') {
+          socket.emit('sendMessage', { msg, name, photo });
+          document.getElementById('msg').value = '';
+          name = 'Eu';
+          renderMsg({ msg, name, photo }, true);
+        } else {
+          alert('Insira uma mensagem!');
+        }
+      }
+    }
+
+    function scrollBottom() {
+      let objScrDiv = document.getElementById("chat");
+      objScrDiv.scrollTop = objScrDiv.scrollHeight;
+    }
+
+  </script>
+</html>

@@ -1,0 +1,221 @@
+* {
+  padding: 0;
+  margin: 0;
+  font-family: Roboto Slab;
+}
+
+nav {
+  background-color: #222;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-body {
+  display: flex;
+  height: 90vh;
+}
+
+aside  {
+  flex: 1;
+  background-color: #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+aside > form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+h1 {
+  color: #ddd;
+  font-size: 30px;
+}
+aside > h1 { 
+  margin-bottom: 50px;
+}
+aside > form > label {
+  display: flex;
+  justify-content: center;
+}
+aside > form > label > img {
+  height: 80%;
+  width: 80%;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+input[type=file] {
+  display: none;
+}
+
+.input-name {
+  border-radius: 8px;
+  border: none;
+  height: 50px;
+  width: 80%;
+  text-align: center;
+  font-size: 18px;
+}
+
+.save-profile {
+  padding: 0px 10px;
+  margin-top: 15px;
+  width: 80%;
+  height: 50px;
+  border: none;
+  background-color: #0000ff ;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 20px;
+
+  transition: ease .2s;
+}
+
+.save-profile:hover {
+  background-color: #4040ff;
+}
+
+.chat {
+  flex: 3;
+  background-color: #444;
+}
+
+.chat-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; 
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #444;
+  width: 75%;
+  height: 81vh;
+  position: absolute;
+  overflow: auto;
+}
+
+.msg-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  height: 100px;
+  width: 90%;
+}
+
+.msg-container-my {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  background-color: darkgray;
+  border-radius: 8px;
+  height: 100px;
+  width: 90%;
+}
+
+.msg-container  > p, .msg-container-my  > p {
+  padding: 10px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ddd;
+  width: 100px;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 8px;
+}
+
+.profile > img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+
+.chat-footer {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  background-color: #222;
+  justify-content: center;
+  width: 74.5%;
+  height: 50px;
+  padding: 8px;
+}
+
+.input-chat {
+  border-radius: 8px;
+  border: none;
+  height: 50px;
+  width: 80%;
+  padding: 0px 10px;
+  font-size: 18px;
+
+  transition: ease .2s;
+}
+
+.submit-msg {
+  width: 15%;
+  margin-left: 10px;
+  border: none;
+  background-color: #0000ff ;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  
+  transition: ease .2s;
+}
+
+.submit-msg:hover {
+  background-color: #4040ff;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ddd;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  background: #ddd;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(151, 148, 148);
+}
+
+input:focus, button:focus {
+  box-shadow: 0 0 0 0;
+  border: 0 none;
+  outline: 0;
+}
+
+.online {
+  background-color: red;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-top: 5px;
+
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
