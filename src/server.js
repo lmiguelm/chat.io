@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
 
@@ -5,7 +7,9 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
 const path = require('path');
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'public'));
 app.engine('html', require('ejs').renderFile);
@@ -27,6 +31,6 @@ io.on('connect', socket => {
   });
 });
 
-http.listen(3333, () => {
-  console.log('server running');
+http.listen(process.env.PORT || 3333, () => {
+  console.log(`server running on ${process.env.APP_URL}`);
 });
