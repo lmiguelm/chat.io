@@ -49,56 +49,58 @@
 
     const socket = io();
 
-    const username = prompt('Informe seu nome de usuário no chat: ');
-    if(username.length == 0) {
+    const name = prompt('Informe seu nome de usuário no chat: ');
+    if(name.length == 0) {
       alert('invalido');
       window.location.reload();
     } else {
-      socket.emit('new-user', username);
-      renderUsers({ name: username });
+      socket.emit('new-user', name);
     }    
 
-    socket.on('new-user', data => {
+    socket.on('new-user', (data, users) => {
       renderMsg(data, false, true, false);
-      renderUsers(data);
+      renderUsers(users);
     });
 
-    socket.on('user-disconnected', data => {
-      renderMsg(data, false, false, true);
-      renderUsers(data);
-      removeUser(data.id);
+    socket.on('user-disconnected', (msg, users) => {
+      renderMsg(msg, false, false, true);
+      renderUsers(users);
     });
 
     socket.on('newMessage', data => {
       renderMsg(data);
     });
 
-    socket.on('loadData', data => {
-      data.messages.map(msg => renderMsg(msg));
-      console.log(data.users);
-      data.users.map(user => renderUsers(user));
+    socket.on('loadData', (messages, users) => {
+      messages.map(msg => renderMsg(msg));
+      renderUsers(users);
     });
 
-    function removeUser(id) {
-      const user = document.querySelector(`.${id}`);
-      user.classList.remove();
-      user.innerHTML='';
-    }
+    function renderUsers(users) {
 
-    function renderUsers(data) {
+      const element = document.getElementById('users');
+      element.innerHTML = '';
 
-      // const users = document.getElementById('users');
-      // users.innerHTML = '';
+      console.log(users);
+      
+      users.forEach(data => {
+        
+        const user = document.createElement('div');
+        user.classList.add('user');
+        
+        console.log(`user: ${user.id} - socket: ${socket.id}`);
 
-      const user = document.createElement('div');
-      user.classList.add('user');
-      user.classList.add(data.id);
+        if(data.id == socket.id) {
+          user.style.background = '#ff4040';
+          user.style.color = '#fff';
+        }
 
-      const name = document.createElement('p');
-      name.innerHTML = data.name;
+        const name = document.createElement('p');
+        name.innerHTML = data.name;
 
-      user.appendChild(name);
-      users.appendChild(user);
+        user.appendChild(name);
+        element.appendChild(user);
+      });
     }
 
     function renderMsg(data, my, connect, disconnect) {
@@ -134,14 +136,12 @@
 
     function sendMessage(e) {
       if(e.keyCode == 13 || e.type == 'click') {
-        let name = localStorage.getItem('name') || 'Anônimo';
-        const photo = localStorage.getItem('photo') || 'https://www.promoview.com.br/uploads/images/unnamed%2819%29.png';
+
         const msg = document.getElementById('msg').value;
 
         if(msg !== '') {
-          socket.emit('sendMessage', { msg, name, photo });
+          socket.emit('sendMessage', { msg, name });
           document.getElementById('msg').value = '';
-          name = 'Eu';
           renderMsg({ msg, name }, true);
         } else {
           alert('Insira uma mensagem!');

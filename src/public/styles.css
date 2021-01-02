@@ -45,6 +45,8 @@ aside > .users-online {
   flex-direction: column;
   width: 100%;
   overflow: auto;
+
+  transition: ease .2s;
 }
 
 aside > .users-online .user {
@@ -198,3 +200,4 @@ input:focus, button:focus {
   margin-right: 10px;
   cursor: pointer;
 }
+

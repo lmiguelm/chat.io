@@ -20,15 +20,15 @@ app.get('/', (req, res) => {
 });
 
 const messages = [];
-const users = [];
+let users = [];
 
 io.on('connect', socket => {
 
-  socket.emit('loadData', {messages, users});
+  socket.emit('loadData', messages, users);
 
   socket.on('new-user', data => {
     users.push({ id: socket.id, name: data });
-    socket.broadcast.emit('new-user', {  name: data, msg: 'acabou de se conectar.' });
+    io.emit('new-user', {  name: data, msg: 'acabou de se conectar.' }, users);
   });
 
   socket.on('sendMessage', data => {
@@ -38,11 +38,15 @@ io.on('connect', socket => {
 
   socket.on('disconnect', () => {
 
-    const [{name}] = users.filter(user => user.id == socket.id);
-    users.filter(user => user.id != socket.id);
+    if(users.length == 0 || !users) {
+      return;
+    }
 
-    if(name != 'undefined') {
-      socket.broadcast.emit('user-disconnected', { name , msg: 'acabou de se desconectar' })
+    const user = users.filter(user => user.id == socket.id);
+    users = users.filter(user => user.id != socket.id);
+    
+    if(user) {
+      socket.broadcast.emit('user-disconnected',  { name: user.name , msg: 'acabou de se desconectar' }, users );
     }
   });
 });
