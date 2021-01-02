@@ -24,63 +24,38 @@ aside  {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  
 }
-aside > form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+
 h1 {
   color: #ddd;
   font-size: 30px;
 }
 aside > h1 { 
-  margin-bottom: 50px;
+  margin: 30px;
 }
 aside > form > label {
   display: flex;
   justify-content: center;
 }
-aside > form > label > img {
-  height: 80%;
+
+aside > .users-online {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: auto;
+}
+
+aside > .users-online .user {
+  align-self: center;
   width: 80%;
+  padding: 8px;
+  background-color: #fff;
+  margin-bottom: 10px;
   border-radius: 8px;
-  margin-bottom: 30px;
-  cursor: pointer;
 }
 
-input[type=file] {
-  display: none;
-}
-
-.input-name {
-  border-radius: 8px;
-  border: none;
-  height: 50px;
-  width: 80%;
-  text-align: center;
-  font-size: 18px;
-}
-
-.save-profile {
-  padding: 0px 10px;
-  margin-top: 15px;
-  width: 80%;
-  height: 50px;
-  border: none;
-  background-color: #0000ff ;
-  border-radius: 8px;
-  color: white;
-  cursor: pointer;
-  font-size: 20px;
-
-  transition: ease .2s;
-}
-
-.save-profile:hover {
-  background-color: #4040ff;
-}
 
 .chat {
   flex: 3;
@@ -105,10 +80,10 @@ input[type=file] {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 20px;
-  margin-right: 20px;
+  margin-right: 15px;
   background-color: #fff;
   border-radius: 8px;
-  height: 100px;
+  height: 40px;
   width: 90%;
 }
 
@@ -116,10 +91,10 @@ input[type=file] {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 20px;
-  margin-right: 20px;
+  margin-right: 15px;
   background-color: darkgray;
   border-radius: 8px;
-  height: 100px;
+  height: 40px;
   width: 90%;
 }
 
@@ -129,23 +104,7 @@ input[type=file] {
   flex-wrap: wrap;
 }
 
-.profile {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #ddd;
-  width: 100px;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 8px;
-}
 
-.profile > img {
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-}
 
 .chat-footer {
   position: fixed;
@@ -187,14 +146,14 @@ input[type=file] {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #ddd;
+  background-color: #333;
 }
 ::-webkit-scrollbar {
   width: 6px;
-  background: #ddd;
+  background: #333;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(151, 148, 148);
+  background: #fff;
 }
 
 input:focus, button:focus {
@@ -224,7 +183,6 @@ input:focus, button:focus {
   flex: 1;
   justify-content: flex-end;
   display: flex;
-  /* background-color: darkgray; */
 }
 
 .title {

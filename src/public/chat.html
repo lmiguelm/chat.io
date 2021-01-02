@@ -23,14 +23,11 @@
       </nav>
       <div class="container-body">
         <aside>
-          <h1>Meu Perfil</h1>
-          <form onsubmit="saveProfile(event)" id="profile">
-            <label for="img">
-              <img src="https://www.promoview.com.br/uploads/images/unnamed%2819%29.png">
-            </label>
-            <input type="text" id="name" class="input-name" placeholder="Informe seu nome">
-            <button type="submit" class="save-profile">Salvar</button>
-          </form>
+          <h1>10 usuários online</h1>
+          
+          <div id="users" class="users-online">
+            
+          </div>
         </aside>
 
         <div class="chat">
@@ -49,17 +46,64 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
   <script>
+
     const socket = io();
+
+    const username = prompt('Informe seu nome de usuário no chat: ');
+    if(username.length == 0) {
+      alert('invalido');
+      window.location.reload();
+    } else {
+      socket.emit('new-user', username);
+      renderUsers({ name: username });
+    }    
+
+    socket.on('new-user', data => {
+      renderMsg(data, false, true, false);
+      renderUsers(data);
+    });
+
+    socket.on('user-disconnected', data => {
+      renderMsg(data, false, false, true);
+      renderUsers(data);
+      removeUser(data.id);
+    });
 
     socket.on('newMessage', data => {
       renderMsg(data);
     });
 
-    socket.on('loadMessages', messages => {
-      messages.map(msg => renderMsg(msg));
+    socket.on('loadData', data => {
+      data.messages.map(msg => renderMsg(msg));
+      console.log(data.users);
+      data.users.map(user => renderUsers(user));
     });
 
-    function renderMsg(data, my) {
+    function removeUser(id) {
+      const user = document.querySelector(`.${id}`);
+      user.classList.remove();
+      user.innerHTML='';
+    }
+
+    function renderUsers(data) {
+
+      // const users = document.getElementById('users');
+      // users.innerHTML = '';
+
+      const user = document.createElement('div');
+      user.classList.add('user');
+      user.classList.add(data.id);
+
+      const name = document.createElement('p');
+      name.innerHTML = data.name;
+
+      user.appendChild(name);
+      users.appendChild(user);
+    }
+
+    function renderMsg(data, my, connect, disconnect) {
+
+
       let chat = document.getElementById('chat');
 
       let messageContainer = document.createElement("div");
@@ -70,37 +114,22 @@
       }
 
       let msg = document.createElement("p");
+      if(connect) {
+        msg.innerText = `${data.name} ${data.msg}`;
+        msg.style.background = 'green';
+        msg.style.color = '#fff';
+      } else if (disconnect) {
+        msg.innerText = `${data.name} ${data.msg}`;
+        msg.style.background = 'red';
+        msg.style.color = '#fff';
+      } else {
+        msg.innerText = `${data.name}: ${data.msg}`;
+      }
 
-      let profileContainer = document.createElement("div");
-      profileContainer.className = 'profile';
-
-
-      let img = document.createElement('img')
-      img.setAttribute('src', data.photo);
-
-      let strong = document.createElement('strong');
-      
-
-      msg.innerText = data.msg;
-      strong.innerText = data.name;
-
-      profileContainer.appendChild(img);
-      profileContainer.appendChild(strong);
       messageContainer.appendChild(msg);
-      messageContainer.appendChild(profileContainer);
       chat.appendChild(messageContainer)
 
       scrollBottom();
-    }
-
-    function saveProfile(e) {
-      e.preventDefault();
-      
-      const name = document.getElementById('name').value;
-
-      localStorage.setItem('name', name);
-      localStorage.setItem('photo', 'https://www.promoview.com.br/uploads/images/unnamed%2819%29.png');
-      alert('Perfil salvo com sucesso!');
     }
 
     function sendMessage(e) {
@@ -113,7 +142,7 @@
           socket.emit('sendMessage', { msg, name, photo });
           document.getElementById('msg').value = '';
           name = 'Eu';
-          renderMsg({ msg, name, photo }, true);
+          renderMsg({ msg, name }, true);
         } else {
           alert('Insira uma mensagem!');
         }
@@ -124,6 +153,9 @@
       let objScrDiv = document.getElementById("chat");
       objScrDiv.scrollTop = objScrDiv.scrollHeight;
     }
+
+     
+    
 
   </script>
 </html>

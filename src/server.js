@@ -19,15 +19,31 @@ app.get('/', (req, res) => {
   res.render('chat.html');
 });
 
-let messages = [];
+const messages = [];
+const users = [];
 
 io.on('connect', socket => {
 
-  socket.emit('loadMessages', messages);
+  socket.emit('loadData', {messages, users});
+
+  socket.on('new-user', data => {
+    users.push({ id: socket.id, name: data });
+    socket.broadcast.emit('new-user', {  name: data, msg: 'acabou de se conectar.' });
+  });
 
   socket.on('sendMessage', data => {
     messages.push(data);
     socket.broadcast.emit('newMessage', data);
+  });
+
+  socket.on('disconnect', () => {
+
+    const [{name}] = users.filter(user => user.id == socket.id);
+    users.filter(user => user.id != socket.id);
+
+    if(name != 'undefined') {
+      socket.broadcast.emit('user-disconnected', { name , msg: 'acabou de se desconectar' })
+    }
   });
 });
 
