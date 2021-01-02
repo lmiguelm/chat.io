@@ -45,8 +45,10 @@ io.on('connect', socket => {
     const user = users.filter(user => user.id == socket.id);
     users = users.filter(user => user.id != socket.id);
     
+    console.log(user);
+
     if(user) {
-      socket.broadcast.emit('user-disconnected',  { name: user.name , msg: 'acabou de se desconectar' }, users );
+      socket.broadcast.emit('user-disconnected',  { name: user[0].name , msg: 'acabou de se desconectar' }, users );
     }
   });
 });
